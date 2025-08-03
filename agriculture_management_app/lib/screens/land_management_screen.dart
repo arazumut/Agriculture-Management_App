@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../widgets/common_app_bar.dart';
 import 'dashboard_screen.dart';
 import 'livestock_screen.dart';
 import 'reports_screen.dart';
@@ -48,7 +49,24 @@ class _LandManagementScreenState extends State<LandManagementScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
+      appBar: CommonAppBar(
+        title: 'Arazi Yönetimi',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+            onPressed: () {
+              // Yeni arazi ekleme
+              _showAddLandDialog();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.map_outlined, color: Colors.white),
+            onPressed: () {
+              // Harita görünümü
+            },
+          ),
+        ],
+      ),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
@@ -68,50 +86,6 @@ class _LandManagementScreenState extends State<LandManagementScreen>
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text(
-        'Arazi Yönetimi',
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: AppColors.primary,
-      elevation: 0,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primary,
-              AppColors.primaryDark,
-            ],
-          ),
-        ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add_circle_outline, color: Colors.white),
-          onPressed: () {
-            _showAddLandDialog();
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_list, color: Colors.white),
-          onPressed: () {
-            // Filtreleme
-          },
-        ),
-      ],
     );
   }
 
