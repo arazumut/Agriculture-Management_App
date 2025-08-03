@@ -9,6 +9,7 @@ import 'finance_screen.dart';
 import 'production_screen.dart';
 import 'calendar_screen.dart';
 import 'reports_screen.dart';
+import 'settings_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -997,6 +998,49 @@ class _DashboardScreenState extends State<DashboardScreen>
             setState(() {
               _selectedIndex = index;
             });
+            
+            // Sayfa navigasyonu
+            switch (index) {
+              case 0:
+                // Ana Sayfa - zaten buradayız
+                break;
+              case 1:
+                // Arazi
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LandManagementScreen(),
+                  ),
+                );
+                break;
+              case 2:
+                // Hayvan
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LivestockScreen(),
+                  ),
+                );
+                break;
+              case 3:
+                // Rapor
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ReportsScreen(),
+                  ),
+                );
+                break;
+              case 4:
+                // Ayarlar
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+                break;
+            }
           },
           items: const [
             BottomNavigationBarItem(

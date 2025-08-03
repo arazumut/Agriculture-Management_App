@@ -11,11 +11,39 @@ class ReportsScreen extends StatefulWidget {
   State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> {
+class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  String selectedPeriod = 'Bu Ay';
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         title: Text(
           'Raporlar & Analizler',
@@ -24,7 +52,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: AppColors.error,
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -32,142 +60,217 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.download, color: Colors.white),
+            icon: const Icon(Icons.download_outlined, color: Colors.white),
             onPressed: () {
               // Rapor indirme
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.share_outlined, color: Colors.white),
+            onPressed: () {
+              // Rapor paylaşma
+            },
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // İstatistik Kartları
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Toplam Gelir',
-                    '₺125,450',
-                    'Bu Yıl',
-                    Icons.trending_up,
-                    AppColors.success,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Toplam Gider',
-                    '₺89,200',
-                    'Bu Yıl',
-                    Icons.trending_down,
-                    AppColors.error,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Net Kar',
-                    '₺36,250',
-                    'Bu Yıl',
-                    Icons.account_balance_wallet,
-                    AppColors.info,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Verimlilik',
-                    '94%',
-                    'Ortalama',
-                    Icons.analytics,
-                    AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Hoş Geldin Alanı
+              _buildWelcomeSection(),
+              const SizedBox(height: 24),
+              
+              // Dönem Seçici
+              _buildPeriodSelector(),
+              const SizedBox(height: 24),
 
-            // Rapor Kategorileri
-            Text(
-              'Rapor Kategorileri',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildReportCategories(),
+              // Özet İstatistikler
+              _buildSummaryStats(),
+              const SizedBox(height: 24),
 
-            const SizedBox(height: 32),
+              // Gelir-Gider Grafiği
+              _buildIncomeExpenseChart(),
+              const SizedBox(height: 24),
 
-            // Yıllık Gelir Grafiği
-            Text(
-              'Yıllık Gelir Analizi',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildYearlyIncomeChart(),
+              // Üretim Analizi
+              _buildProductionAnalysis(),
+              const SizedBox(height: 24),
 
-            const SizedBox(height: 32),
-
-            // Ürün Performansı
-            Text(
-              'Ürün Performansı',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildProductPerformance(),
-
-            const SizedBox(height: 32),
-
-            // Detaylı Raporlar
-            Text(
-              'Detaylı Raporlar',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildDetailedReports(),
-          ],
+              // Performans Metrikleri
+              _buildPerformanceMetrics(),
+              const SizedBox(height: 100), // Bottom navigation için boşluk
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    String subtitle,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildWelcomeSection() {
     return Container(
       padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Çiftlik Raporları',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Detaylı analizler ve performans metrikleri',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.analytics,
+            size: 48,
+            color: Colors.white.withOpacity(0.8),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPeriodSelector() {
+    final periods = ['Bu Hafta', 'Bu Ay', 'Bu Yıl', 'Tümü'];
+    
+    return Container(
+      height: 45,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: periods.length,
+        itemBuilder: (context, index) {
+          final period = periods[index];
+          final isSelected = selectedPeriod == period;
+          
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedPeriod = period;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
+                  period,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSummaryStats() {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      childAspectRatio: 1.4,
+      crossAxisSpacing: 16,
+      mainAxisSpacing: 16,
+      children: [
+        _buildSummaryCard(
+          'Toplam Gelir',
+          '₺45,600',
+          'Bu ay +12%',
+          Icons.trending_up,
+          AppColors.success,
+          true,
+        ),
+        _buildSummaryCard(
+          'Toplam Gider',
+          '₺23,400',
+          'Bu ay -5%',
+          Icons.trending_down,
+          AppColors.error,
+          false,
+        ),
+        _buildSummaryCard(
+          'Net Kar',
+          '₺22,200',
+          'Bu ay +18%',
+          Icons.account_balance_wallet,
+          AppColors.primary,
+          true,
+        ),
+        _buildSummaryCard(
+          'ROI',
+          '%48.7',
+          'Bu ay +2.1%',
+          Icons.percent,
+          AppColors.info,
+          true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryCard(String title, String value, String change,
+      IconData icon, Color color, bool isPositive) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -177,6 +280,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
@@ -184,35 +288,37 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: color, size: 24),
+                child: Icon(icon, color: color, size: 20),
               ),
-              const Spacer(),
-              Icon(Icons.more_vert, color: AppColors.textSecondary),
+              Icon(
+                isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+                color: isPositive ? AppColors.success : AppColors.error,
+                size: 16,
+              ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             value,
             style: GoogleFonts.poppins(
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
           ),
           Text(
-            subtitle,
+            title,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
               color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 8),
           Text(
-            title,
+            change,
             style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              fontSize: 10,
+              color: isPositive ? AppColors.success : AppColors.error,
             ),
           ),
         ],
@@ -220,422 +326,260 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildReportCategories() {
-    final categories = [
-      {
-        'name': 'Finansal Rapor',
-        'icon': Icons.account_balance,
-        'color': AppColors.success,
-      },
-      {
-        'name': 'Üretim Raporu',
-        'icon': Icons.analytics,
-        'color': AppColors.primary,
-      },
-      {
-        'name': 'Hayvancılık Raporu',
-        'icon': Icons.pets,
-        'color': AppColors.secondary,
-      },
-      {
-        'name': 'Arazi Raporu',
-        'icon': Icons.landscape,
-        'color': AppColors.info,
-      },
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
-      ),
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        final category = categories[index];
-        return Container(
+  Widget _buildIncomeExpenseChart() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Gelir-Gider Analizi',
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          height: 250,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(show: true),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    getTitlesWidget: (value, meta) {
+                      return Text(
+                        '${value.toInt()}K',
+                        style: GoogleFonts.poppins(fontSize: 10),
+                      );
+                    },
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz'];
+                      return Text(
+                        months[value.toInt() % months.length],
+                        style: GoogleFonts.poppins(fontSize: 10),
+                      );
+                    },
+                  ),
+                ),
+                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              ),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: [
+                    FlSpot(0, 30),
+                    FlSpot(1, 35),
+                    FlSpot(2, 40),
+                    FlSpot(3, 38),
+                    FlSpot(4, 45),
+                    FlSpot(5, 42),
+                  ],
+                  isCurved: true,
+                  color: AppColors.success,
+                  barWidth: 3,
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: AppColors.success.withOpacity(0.1),
+                  ),
+                ),
+                LineChartBarData(
+                  spots: [
+                    FlSpot(0, 20),
+                    FlSpot(1, 25),
+                    FlSpot(2, 22),
+                    FlSpot(3, 28),
+                    FlSpot(4, 24),
+                    FlSpot(5, 23),
+                  ],
+                  isCurved: true,
+                  color: AppColors.error,
+                  barWidth: 3,
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: AppColors.error.withOpacity(0.1),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductionAnalysis() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Üretim Analizi',
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: (category['color'] as Color).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  category['icon'] as IconData,
-                  color: category['color'] as Color,
-                  size: 40,
-                ),
-              ),
-              const SizedBox(height: 16),
+              _buildProductionItem('Süt Üretimi', '1,250L', '85%', AppColors.info),
+              const Divider(height: 32),
+              _buildProductionItem('Meyve Hasadı', '2.8 Ton', '92%', AppColors.success),
+              const Divider(height: 32),
+              _buildProductionItem('Sebze Üretimi', '1.6 Ton', '78%', AppColors.warning),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductionItem(String title, String amount, String efficiency, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(Icons.agriculture, color: color),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                category['name'] as String,
+                title,
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                 ),
-                textAlign: TextAlign.center,
+              ),
+              Text(
+                amount,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildYearlyIncomeChart() {
-    return Container(
-      height: 300,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Aylık Gelir Trendi',
+          child: Text(
+            efficiency,
             style: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: color,
             ),
           ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: LineChart(
-              LineChartData(
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: true,
-                  horizontalInterval: 20000,
-                  verticalInterval: 1,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: AppColors.textSecondary.withOpacity(0.2),
-                      strokeWidth: 1,
-                    );
-                  },
-                  getDrawingVerticalLine: (value) {
-                    return FlLine(
-                      color: AppColors.textSecondary.withOpacity(0.2),
-                      strokeWidth: 1,
-                    );
-                  },
-                ),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 50,
-                      interval: 20000,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          '₺${(value / 1000).toInt()}K',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 30,
-                      getTitlesWidget: (value, meta) {
-                        const months = [
-                          'Oca',
-                          'Şub',
-                          'Mar',
-                          'Nis',
-                          'May',
-                          'Haz',
-                          'Tem',
-                          'Ağu',
-                          'Eyl',
-                          'Eki',
-                          'Kas',
-                          'Ara',
-                        ];
-                        if (value.toInt() < months.length) {
-                          return Text(
-                            months[value.toInt()],
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
-                          );
-                        }
-                        return const Text('');
-                      },
-                    ),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                borderData: FlBorderData(show: false),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: const [
-                      FlSpot(0, 85000),
-                      FlSpot(1, 92000),
-                      FlSpot(2, 88000),
-                      FlSpot(3, 95000),
-                      FlSpot(4, 91000),
-                      FlSpot(5, 98000),
-                      FlSpot(6, 105000),
-                      FlSpot(7, 102000),
-                      FlSpot(8, 108000),
-                      FlSpot(9, 115000),
-                      FlSpot(10, 112000),
-                      FlSpot(11, 125000),
-                    ],
-                    isCurved: true,
-                    color: AppColors.success,
-                    barWidth: 3,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) {
-                        return FlDotCirclePainter(
-                          radius: 6,
-                          color: AppColors.success,
-                          strokeWidth: 2,
-                          strokeColor: Colors.white,
-                        );
-                      },
-                    ),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      color: AppColors.success.withOpacity(0.1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildProductPerformance() {
-    final products = <Map<String, dynamic>>[
-      {
-        'name': 'Buğday',
-        'revenue': '₺45,200',
-        'growth': '+12%',
-        'color': AppColors.primary,
-      },
-      {
-        'name': 'Elma',
-        'revenue': '₺28,500',
-        'growth': '+8%',
-        'color': AppColors.success,
-      },
-      {
-        'name': 'Domates',
-        'revenue': '₺22,300',
-        'growth': '+15%',
-        'color': AppColors.info,
-      },
-      {
-        'name': 'Süt',
-        'revenue': '₺29,450',
-        'growth': '+5%',
-        'color': AppColors.secondary,
-      },
-    ];
-
+  Widget _buildPerformanceMetrics() {
     return Column(
-      children: products.map((product) => _buildProductCard(product)).toList(),
-    );
-  }
-
-  Widget _buildProductCard(Map<String, dynamic> product) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Performans Metrikleri',
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.analytics, color: AppColors.primary, size: 24),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          height: 200,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product['name']!,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+          child: BarChart(
+            BarChartData(
+              gridData: FlGridData(show: false),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      const categories = ['Süt', 'Meyve', 'Sebze', 'Hayvan'];
+                      return Text(
+                        categories[value.toInt() % categories.length],
+                        style: GoogleFonts.poppins(fontSize: 10),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  product['revenue']!,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
+              ),
+              borderData: FlBorderData(show: false),
+              barGroups: [
+                BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 85, color: AppColors.info, width: 20)]),
+                BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 92, color: AppColors.success, width: 20)]),
+                BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 78, color: AppColors.warning, width: 20)]),
+                BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 95, color: AppColors.secondary, width: 20)]),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.success.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              product['growth']!,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.success,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailedReports() {
-    final reports = [
-      {'name': 'Aylık Finansal Rapor', 'date': 'Mart 2024', 'size': '2.5 MB'},
-      {
-        'name': 'Üretim Performans Raporu',
-        'date': 'Mart 2024',
-        'size': '1.8 MB',
-      },
-      {
-        'name': 'Hayvancılık Sağlık Raporu',
-        'date': 'Mart 2024',
-        'size': '3.2 MB',
-      },
-      {
-        'name': 'Arazi Verimlilik Raporu',
-        'date': 'Mart 2024',
-        'size': '2.1 MB',
-      },
-    ];
-
-    return Column(
-      children: reports.map((report) => _buildReportCard(report)).toList(),
-    );
-  }
-
-  Widget _buildReportCard(Map<String, String> report) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.description, color: AppColors.error, size: 24),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  report['name']!,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${report['date']} • ${report['size']}',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.download, color: AppColors.error),
-            onPressed: () {
-              // Rapor indirme
-            },
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
