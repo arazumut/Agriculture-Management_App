@@ -5,6 +5,12 @@ import 'package:fl_chart/fl_chart.dart';
 import '../constants/app_colors.dart';
 import '../widgets/dashboard_card.dart';
 import '../widgets/stat_card.dart';
+import 'land_management_screen.dart';
+import 'livestock_screen.dart';
+import 'finance_screen.dart';
+import 'production_screen.dart';
+import 'calendar_screen.dart';
+import 'reports_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -135,60 +141,90 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 1.2,
+              childAspectRatio: 1.8,
               children: [
                 DashboardCard(
                   title: 'Arazi Yönetimi',
-                  subtitle: 'Arazilerinizi yönetin',
+                  subtitle: 'Arazi bilgileri',
                   icon: Icons.landscape,
                   color: AppColors.primary,
                   onTap: () {
-                    // Arazi yönetimi sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LandManagementScreen(),
+                      ),
+                    );
                   },
                 ),
                 DashboardCard(
                   title: 'Hayvancılık',
-                  subtitle: 'Hayvanlarınızı takip edin',
+                  subtitle: 'Hayvan takibi',
                   icon: Icons.pets,
                   color: AppColors.secondary,
                   onTap: () {
-                    // Hayvancılık sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LivestockScreen(),
+                      ),
+                    );
                   },
                 ),
                 DashboardCard(
                   title: 'Üretim Takibi',
-                  subtitle: 'Üretim süreçlerinizi izleyin',
+                  subtitle: 'Üretim bilgileri',
                   icon: Icons.eco,
                   color: AppColors.success,
                   onTap: () {
-                    // Üretim takibi sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProductionScreen(),
+                      ),
+                    );
                   },
                 ),
                 DashboardCard(
                   title: 'Finans',
-                  subtitle: 'Gelir-gider takibi',
+                  subtitle: 'Gelir-gider',
                   icon: Icons.account_balance_wallet,
                   color: AppColors.info,
                   onTap: () {
-                    // Finans sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FinanceScreen(),
+                      ),
+                    );
                   },
                 ),
                 DashboardCard(
                   title: 'Takvim',
-                  subtitle: 'İş planlarınızı görün',
+                  subtitle: 'İş planları',
                   icon: Icons.calendar_today,
                   color: AppColors.warning,
                   onTap: () {
-                    // Takvim sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CalendarScreen(),
+                      ),
+                    );
                   },
                 ),
                 DashboardCard(
                   title: 'Raporlar',
-                  subtitle: 'Detaylı analizler',
+                  subtitle: 'Analizler',
                   icon: Icons.analytics,
                   color: AppColors.error,
                   onTap: () {
-                    // Raporlar sayfasına git
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportsScreen(),
+                      ),
+                    );
                   },
                 ),
               ],
