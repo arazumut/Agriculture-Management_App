@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../widgets/common_app_bar.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -11,7 +12,8 @@ class ReportsScreen extends StatefulWidget {
   State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateMixin {
+class _ReportsScreenState extends State<ReportsScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   String selectedPeriod = 'Bu Ay';
@@ -23,14 +25,10 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
   }
 
@@ -44,20 +42,8 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: Text(
-          'Raporlar & Analizler',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: CommonAppBar(
+        title: 'Raporlar & Analizler',
         actions: [
           IconButton(
             icon: const Icon(Icons.download_outlined, color: Colors.white),
@@ -83,7 +69,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               // Hoş Geldin Alanı
               _buildWelcomeSection(),
               const SizedBox(height: 24),
-              
+
               // Dönem Seçici
               _buildPeriodSelector(),
               const SizedBox(height: 24),
@@ -153,11 +139,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               ],
             ),
           ),
-          Icon(
-            Icons.analytics,
-            size: 48,
-            color: Colors.white.withOpacity(0.8),
-          ),
+          Icon(Icons.analytics, size: 48, color: Colors.white.withOpacity(0.8)),
         ],
       ),
     );
@@ -165,7 +147,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
 
   Widget _buildPeriodSelector() {
     final periods = ['Bu Hafta', 'Bu Ay', 'Bu Yıl', 'Tümü'];
-    
+
     return Container(
       height: 45,
       decoration: BoxDecoration(
@@ -185,7 +167,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
         itemBuilder: (context, index) {
           final period = periods[index];
           final isSelected = selectedPeriod == period;
-          
+
           return GestureDetector(
             onTap: () {
               setState(() {
@@ -261,8 +243,14 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildSummaryCard(String title, String value, String change,
-      IconData icon, Color color, bool isPositive) {
+  Widget _buildSummaryCard(
+    String title,
+    String value,
+    String change,
+    IconData icon,
+    Color color,
+    bool isPositive,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -381,8 +369,12 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
                     },
                   ),
                 ),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: false),
               lineBarsData: [
@@ -456,11 +448,26 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
           ),
           child: Column(
             children: [
-              _buildProductionItem('Süt Üretimi', '1,250L', '85%', AppColors.info),
+              _buildProductionItem(
+                'Süt Üretimi',
+                '1,250L',
+                '85%',
+                AppColors.info,
+              ),
               const Divider(height: 32),
-              _buildProductionItem('Meyve Hasadı', '2.8 Ton', '92%', AppColors.success),
+              _buildProductionItem(
+                'Meyve Hasadı',
+                '2.8 Ton',
+                '92%',
+                AppColors.success,
+              ),
               const Divider(height: 32),
-              _buildProductionItem('Sebze Üretimi', '1.6 Ton', '78%', AppColors.warning),
+              _buildProductionItem(
+                'Sebze Üretimi',
+                '1.6 Ton',
+                '78%',
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -468,7 +475,12 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildProductionItem(String title, String amount, String efficiency, Color color) {
+  Widget _buildProductionItem(
+    String title,
+    String amount,
+    String efficiency,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -553,9 +565,15 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
             BarChartData(
               gridData: FlGridData(show: false),
               titlesData: FlTitlesData(
-                leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
@@ -571,10 +589,42 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               ),
               borderData: FlBorderData(show: false),
               barGroups: [
-                BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 85, color: AppColors.info, width: 20)]),
-                BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 92, color: AppColors.success, width: 20)]),
-                BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 78, color: AppColors.warning, width: 20)]),
-                BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 95, color: AppColors.secondary, width: 20)]),
+                BarChartGroupData(
+                  x: 0,
+                  barRods: [
+                    BarChartRodData(toY: 85, color: AppColors.info, width: 20),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 1,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 92,
+                      color: AppColors.success,
+                      width: 20,
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 2,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 78,
+                      color: AppColors.warning,
+                      width: 20,
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 3,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 95,
+                      color: AppColors.secondary,
+                      width: 20,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

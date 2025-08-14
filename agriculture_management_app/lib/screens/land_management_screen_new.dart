@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../widgets/common_app_bar.dart';
 import 'dashboard_screen.dart';
 import 'livestock_screen.dart';
 import 'reports_screen.dart';
@@ -15,7 +16,7 @@ class LandManagementScreen extends StatefulWidget {
   State<LandManagementScreen> createState() => _LandManagementScreenState();
 }
 
-class _LandManagementScreenState extends State<LandManagementScreen> 
+class _LandManagementScreenState extends State<LandManagementScreen>
     with TickerProviderStateMixin {
   int _selectedIndex = 1; // Arazi sekmesi aktif
   late AnimationController _animationController;
@@ -28,13 +29,9 @@ class _LandManagementScreenState extends State<LandManagementScreen>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
     _animationController.forward();
   }
 
@@ -48,7 +45,23 @@ class _LandManagementScreenState extends State<LandManagementScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
+      appBar: CommonAppBar(
+        title: 'Arazi Yönetimi',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+            onPressed: () {
+              _showAddLandDialog();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.filter_list, color: Colors.white),
+            onPressed: () {
+              // Filtreleme
+            },
+          ),
+        ],
+      ),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
@@ -71,49 +84,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text(
-        'Arazi Yönetimi',
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: AppColors.primary,
-      elevation: 0,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primary,
-              AppColors.primaryDark,
-            ],
-          ),
-        ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add_circle_outline, color: Colors.white),
-          onPressed: () {
-            _showAddLandDialog();
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_list, color: Colors.white),
-          onPressed: () {
-            // Filtreleme
-          },
-        ),
-      ],
-    );
-  }
+  // Removed _buildAppBar() as we now use CommonAppBar
 
   Widget _buildWelcomeSection() {
     return Container(
@@ -128,10 +99,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 1),
       ),
       child: Row(
         children: [
@@ -157,7 +125,10 @@ class _LandManagementScreenState extends State<LandManagementScreen>
                 ),
                 const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -191,11 +162,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
               color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              Icons.agriculture,
-              size: 40,
-              color: AppColors.primary,
-            ),
+            child: Icon(Icons.agriculture, size: 40, color: AppColors.primary),
           ),
         ],
       ),
@@ -313,9 +280,10 @@ class _LandManagementScreenState extends State<LandManagementScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isPositive 
-                    ? AppColors.success.withOpacity(0.1) 
-                    : AppColors.error.withOpacity(0.1),
+                  color:
+                      isPositive
+                          ? AppColors.success.withOpacity(0.1)
+                          : AppColors.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -426,7 +394,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
         'crop': 'Buğday',
         'status': 'Aktif',
         'lastActivity': 'Sulama - 2 gün önce',
-        'productivity': '95%'
+        'productivity': '95%',
       },
       {
         'name': 'Bahçe Alanı',
@@ -434,7 +402,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
         'crop': 'Elma',
         'status': 'Aktif',
         'lastActivity': 'Gübreleme - 1 hafta önce',
-        'productivity': '88%'
+        'productivity': '88%',
       },
       {
         'name': 'Serada',
@@ -442,7 +410,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
         'crop': 'Domates',
         'status': 'Aktif',
         'lastActivity': 'Hasat - 3 gün önce',
-        'productivity': '92%'
+        'productivity': '92%',
       },
       {
         'name': 'Mera Alanı',
@@ -450,13 +418,11 @@ class _LandManagementScreenState extends State<LandManagementScreen>
         'crop': 'Çayır',
         'status': 'Pasif',
         'lastActivity': 'Bakım - 2 hafta önce',
-        'productivity': '70%'
+        'productivity': '70%',
       },
     ];
 
-    return Column(
-      children: lands.map((land) => _buildLandCard(land)).toList(),
-    );
+    return Column(children: lands.map((land) => _buildLandCard(land)).toList());
   }
 
   Widget _buildLandCard(Map<String, String> land) {
@@ -473,10 +439,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
             offset: const Offset(0, 6),
           ),
         ],
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 1),
       ),
       child: Column(
         children: [
@@ -519,11 +482,15 @@ class _LandManagementScreenState extends State<LandManagementScreen>
                         ),
                         const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: land['status'] == 'Aktif'
-                                ? AppColors.success.withOpacity(0.1)
-                                : AppColors.error.withOpacity(0.1),
+                            color:
+                                land['status'] == 'Aktif'
+                                    ? AppColors.success.withOpacity(0.1)
+                                    : AppColors.error.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -531,9 +498,10 @@ class _LandManagementScreenState extends State<LandManagementScreen>
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: land['status'] == 'Aktif'
-                                  ? AppColors.success
-                                  : AppColors.error,
+                              color:
+                                  land['status'] == 'Aktif'
+                                      ? AppColors.success
+                                      : AppColors.error,
                             ),
                           ),
                         ),
@@ -563,11 +531,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
           const SizedBox(height: 16),
           Row(
             children: [
-              Icon(
-                Icons.analytics,
-                size: 16,
-                color: AppColors.info,
-              ),
+              Icon(Icons.analytics, size: 16, color: AppColors.info),
               const SizedBox(width: 6),
               Text(
                 'Verimlilik: ${land['productivity']}',
@@ -640,7 +604,10 @@ class _LandManagementScreenState extends State<LandManagementScreen>
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.success.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -820,7 +787,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
             setState(() {
               _selectedIndex = index;
             });
-            
+
             // Sayfa navigasyonu
             switch (index) {
               case 0:
@@ -948,9 +915,7 @@ class _LandManagementScreenState extends State<LandManagementScreen>
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'İptal',
-                style: GoogleFonts.poppins(
-                  color: AppColors.textSecondary,
-                ),
+                style: GoogleFonts.poppins(color: AppColors.textSecondary),
               ),
             ),
             ElevatedButton(

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../widgets/common_app_bar.dart';
 
 class LivestockScreen extends StatefulWidget {
   const LivestockScreen({super.key});
@@ -11,7 +12,8 @@ class LivestockScreen extends StatefulWidget {
   State<LivestockScreen> createState() => _LivestockScreenState();
 }
 
-class _LivestockScreenState extends State<LivestockScreen> with TickerProviderStateMixin {
+class _LivestockScreenState extends State<LivestockScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -22,14 +24,10 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
   }
 
@@ -43,20 +41,8 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: Text(
-          'Hayvancılık Yönetimi',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: AppColors.secondary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: CommonAppBar(
+        title: 'Hayvancılık Yönetimi',
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.white),
@@ -76,7 +62,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               // Hoş Geldin Alanı
               _buildWelcomeSection(),
               const SizedBox(height: 24),
-              
+
               // İstatistik Kartları
               _buildStatsGrid(),
               const SizedBox(height: 24),
@@ -142,11 +128,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               ],
             ),
           ),
-          Icon(
-            Icons.pets,
-            size: 48,
-            color: Colors.white.withOpacity(0.8),
-          ),
+          Icon(Icons.pets, size: 48, color: Colors.white.withOpacity(0.8)),
         ],
       ),
     );
@@ -197,8 +179,14 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildEnhancedStatCard(String title, String value, String subtitle,
-      IconData icon, Color color, String trend) {
+  Widget _buildEnhancedStatCard(
+    String title,
+    String value,
+    String subtitle,
+    IconData icon,
+    Color color,
+    String trend,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -290,10 +278,30 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildCategoryCard('Büyükbaş', '45', Icons.emoji_nature, AppColors.primary),
-              _buildCategoryCard('Küçükbaş', '80', Icons.pets, AppColors.secondary),
-              _buildCategoryCard('Kanatlı', '150', Icons.flutter_dash, AppColors.info),
-              _buildCategoryCard('Diğer', '12', Icons.category, AppColors.warning),
+              _buildCategoryCard(
+                'Büyükbaş',
+                '45',
+                Icons.emoji_nature,
+                AppColors.primary,
+              ),
+              _buildCategoryCard(
+                'Küçükbaş',
+                '80',
+                Icons.pets,
+                AppColors.secondary,
+              ),
+              _buildCategoryCard(
+                'Kanatlı',
+                '150',
+                Icons.flutter_dash,
+                AppColors.info,
+              ),
+              _buildCategoryCard(
+                'Diğer',
+                '12',
+                Icons.category,
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -301,7 +309,12 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildCategoryCard(String title, String count, IconData icon, Color color) {
+  Widget _buildCategoryCard(
+    String title,
+    String count,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       width: 140,
       margin: const EdgeInsets.only(right: 16),
@@ -373,9 +386,24 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           ),
           child: Column(
             children: [
-              _buildActivityItem('Aşı Uygulaması', 'İnek #23 - 2 saat önce', Icons.medical_services, AppColors.success),
-              _buildActivityItem('Sağlık Kontrolü', 'Koyun #45 - 5 saat önce', Icons.health_and_safety, AppColors.info),
-              _buildActivityItem('Süt Sağımı', '120L toplandı - 1 gün önce', Icons.local_drink, AppColors.warning),
+              _buildActivityItem(
+                'Aşı Uygulaması',
+                'İnek #23 - 2 saat önce',
+                Icons.medical_services,
+                AppColors.success,
+              ),
+              _buildActivityItem(
+                'Sağlık Kontrolü',
+                'Koyun #45 - 5 saat önce',
+                Icons.health_and_safety,
+                AppColors.info,
+              ),
+              _buildActivityItem(
+                'Süt Sağımı',
+                '120L toplandı - 1 gün önce',
+                Icons.local_drink,
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -383,7 +411,12 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildActivityItem(String title, String subtitle, IconData icon, Color color) {
+  Widget _buildActivityItem(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -419,11 +452,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            color: AppColors.textSecondary,
-            size: 20,
-          ),
+          Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
         ],
       ),
     );
