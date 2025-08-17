@@ -50,7 +50,6 @@ Modern tarım ve hayvancılık işletmeleri için geliştirilmiş kapsamlı Flut
 - Dart SDK 3.0 veya üzeri
 - Android Studio / VS Code
 - Git
-- 
 
 ### Adımlar
 
