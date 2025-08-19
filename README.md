@@ -21,7 +21,6 @@ Modern tarım ve hayvancılık işletmeleri için geliştirilmiş kapsamlı Flut
 - Sağlık durumu takibi
 - Aşılama ve veteriner kontrolleri
 - Doğum, ölüm ve satış kayıtları
-- 
 
 ### 💰 Finans Yönetimi
 - Gelir-gider takibi
