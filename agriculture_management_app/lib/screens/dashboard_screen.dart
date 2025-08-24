@@ -4,13 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
 import '../widgets/common_app_bar.dart';
-import 'land_management_screen.dart';
-import 'livestock_screen.dart';
+import '../widgets/main_container.dart';
 import 'finance_screen.dart';
 import 'production_screen.dart';
 import 'calendar_screen.dart';
-import 'reports_screen.dart';
-import 'settings_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -21,7 +18,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> 
     with TickerProviderStateMixin {
-  int _selectedIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -101,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -116,11 +112,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               _buildChartSection(),
               const SizedBox(height: 32),
               _buildRecentActivities(),
+              const SizedBox(height: 100), // Add extra bottom padding for navigation bar
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -431,10 +427,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               icon: Icons.landscape,
               color: AppColors.primary,
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LandManagementScreen(),
+                    builder: (context) => const MainContainer(initialPageIndex: 1),
                   ),
                 );
               },
@@ -445,10 +441,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               icon: Icons.pets,
               color: AppColors.secondary,
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LivestockScreen(),
+                    builder: (context) => const MainContainer(initialPageIndex: 2),
                   ),
                 );
               },
@@ -501,10 +497,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               icon: Icons.analytics,
               color: AppColors.error,
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ReportsScreen(),
+                    builder: (context) => const MainContainer(initialPageIndex: 3),
                   ),
                 );
               },
@@ -936,119 +932,5 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.textSecondary,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          selectedLabelStyle: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-          unselectedLabelStyle: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-            
-            // Sayfa navigasyonu
-            switch (index) {
-              case 0:
-                // Ana Sayfa - zaten buradayız
-                break;
-              case 1:
-                // Arazi
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LandManagementScreen(),
-                  ),
-                );
-                break;
-              case 2:
-                // Hayvan
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LivestockScreen(),
-                  ),
-                );
-                break;
-              case 3:
-                // Rapor
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ReportsScreen(),
-                  ),
-                );
-                break;
-              case 4:
-                // Ayarlar
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-                break;
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
-              label: 'Ana Sayfa',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.landscape_outlined),
-              activeIcon: Icon(Icons.landscape),
-              label: 'Arazi',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.pets_outlined),
-              activeIcon: Icon(Icons.pets),
-              label: 'Hayvan',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.analytics_outlined),
-              activeIcon: Icon(Icons.analytics),
-              label: 'Rapor',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              activeIcon: Icon(Icons.settings),
-              label: 'Ayarlar',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

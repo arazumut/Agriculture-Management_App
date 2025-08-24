@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               _buildAboutSection(),
               const SizedBox(height: 32),
               _buildLogoutSection(),
+              const SizedBox(height: 100), // Extra padding for bottom navigation
             ],
           ),
         ),

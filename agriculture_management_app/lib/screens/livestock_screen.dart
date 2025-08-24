@@ -57,31 +57,38 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Hoş Geldin Alanı
-              _buildWelcomeSection(),
-              const SizedBox(height: 24),
-              
-              // İstatistik Kartları
-              _buildStatsGrid(),
-              const SizedBox(height: 24),
+        child: SafeArea(
+          bottom: false, // Bottom safe area'yı devre dışı bırak
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 12,
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Hoş Geldin Alanı
+                _buildWelcomeSection(),
+                const SizedBox(height: 16),
+                
+                // İstatistik Kartları
+                _buildStatsGrid(),
+                const SizedBox(height: 16),
 
-              // Hayvan Kategorileri
-              _buildCategorySection(),
-              const SizedBox(height: 24),
+                // Hayvan Kategorileri
+                _buildCategorySection(),
+                const SizedBox(height: 16),
 
-              // Son Aktiviteler
-              _buildRecentActivities(),
-              const SizedBox(height: 24),
+                // Son Aktiviteler
+                _buildRecentActivities(),
+                const SizedBox(height: 16),
 
-              // Sağlık Durumu Grafiği
-              _buildHealthChart(),
-              const SizedBox(height: 100), // Bottom navigation için boşluk
-            ],
+                // Sağlık Durumu Grafiği
+                _buildHealthChart(),
+              ],
+            ),
           ),
         ),
       ),
@@ -90,7 +97,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
 
   Widget _buildWelcomeSection() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [AppColors.secondary, AppColors.secondary.withOpacity(0.8)],
@@ -115,16 +122,16 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                 Text(
                   'Hayvan Çiftliği',
                   style: GoogleFonts.poppins(
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   'Hayvanlarınızın sağlığını takip edin',
                   style: GoogleFonts.poppins(
-                    fontSize: 14,
+                    fontSize: 13,
                     color: Colors.white.withOpacity(0.9),
                   ),
                 ),
@@ -133,7 +140,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           ),
           Icon(
             Icons.pets,
-            size: 48,
+            size: 42,
             color: Colors.white.withOpacity(0.8),
           ),
         ],
@@ -142,54 +149,58 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
   }
 
   Widget _buildStatsGrid() {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      childAspectRatio: 1.4,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      children: [
-        _buildEnhancedStatCard(
-          'Toplam Hayvan',
-          '125',
-          'Büyükbaş & Küçükbaş',
-          Icons.pets,
-          AppColors.primary,
-          '+5',
-        ),
-        _buildEnhancedStatCard(
-          'Sağlıklı',
-          '119',
-          'Hayvan',
-          Icons.favorite,
-          AppColors.success,
-          '+2',
-        ),
-        _buildEnhancedStatCard(
-          'Süt Üretimi',
-          '450L',
-          'Günlük',
-          Icons.local_drink,
-          AppColors.info,
-          '+12L',
-        ),
-        _buildEnhancedStatCard(
-          'Aşı Oranı',
-          '%95',
-          'Tamamlandı',
-          Icons.medical_services,
-          AppColors.warning,
-          '+5%',
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: constraints.maxWidth > 400 ? 1.5 : 1.3,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            _buildEnhancedStatCard(
+              'Toplam Hayvan',
+              '125',
+              'Büyükbaş & Küçükbaş',
+              Icons.pets,
+              AppColors.primary,
+              '+5',
+            ),
+            _buildEnhancedStatCard(
+              'Sağlıklı',
+              '119',
+              'Hayvan',
+              Icons.favorite,
+              AppColors.success,
+              '+2',
+            ),
+            _buildEnhancedStatCard(
+              'Süt Üretimi',
+              '450L',
+              'Günlük',
+              Icons.local_drink,
+              AppColors.info,
+              '+12L',
+            ),
+            _buildEnhancedStatCard(
+              'Aşı Oranı',
+              '%95',
+              'Tamamlandı',
+              Icons.medical_services,
+              AppColors.warning,
+              '+5%',
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildEnhancedStatCard(String title, String value, String subtitle,
       IconData icon, Color color, String trend) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -208,23 +219,23 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: color, size: 20),
+                child: Icon(icon, color: color, size: 18),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.success.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   trend,
                   style: GoogleFonts.poppins(
-                    fontSize: 10,
+                    fontSize: 9,
                     fontWeight: FontWeight.w500,
                     color: AppColors.success,
                   ),
@@ -232,28 +243,36 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          Text(
-            subtitle,
-            style: GoogleFonts.poppins(
-              fontSize: 10,
-              color: AppColors.textSecondary,
+          const SizedBox(height: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  value,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.poppins(
+                    fontSize: 9,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -275,7 +294,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
         ),
         const SizedBox(height: 16),
         SizedBox(
-          height: 120,
+          height: 110,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
@@ -292,9 +311,9 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
 
   Widget _buildCategoryCard(String title, String count, IconData icon, Color color) {
     return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.all(16),
+      width: 130,
+      margin: const EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [color, color.withOpacity(0.8)],
@@ -313,12 +332,12 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.white, size: 32),
+          Icon(icon, color: Colors.white, size: 28),
           const Spacer(),
           Text(
             count,
             style: GoogleFonts.poppins(
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -326,7 +345,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           Text(
             title,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.white.withOpacity(0.9),
             ),
           ),
@@ -374,18 +393,18 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
 
   Widget _buildActivityItem(String title, String subtitle, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(icon, color: color, size: 18),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,7 +412,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                 Text(
                   title,
                   style: GoogleFonts.poppins(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
                   ),
@@ -401,7 +420,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                 Text(
                   subtitle,
                   style: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 11,
                     color: AppColors.textSecondary,
                   ),
                 ),
@@ -411,7 +430,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           Icon(
             Icons.chevron_right,
             color: AppColors.textSecondary,
-            size: 20,
+            size: 18,
           ),
         ],
       ),
@@ -432,8 +451,8 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
         ),
         const SizedBox(height: 16),
         Container(
-          height: 200,
-          padding: const EdgeInsets.all(20),
+          height: 180,
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -452,9 +471,9 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                   value: 85,
                   title: 'Sağlıklı\n85%',
                   color: AppColors.success,
-                  radius: 60,
+                  radius: 55,
                   titleStyle: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -463,9 +482,9 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                   value: 10,
                   title: 'Tedavi\n10%',
                   color: AppColors.warning,
-                  radius: 50,
+                  radius: 45,
                   titleStyle: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -474,9 +493,9 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                   value: 5,
                   title: 'Kritik\n5%',
                   color: AppColors.error,
-                  radius: 50,
+                  radius: 45,
                   titleStyle: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

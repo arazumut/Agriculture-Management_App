@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'constants/app_colors.dart';
 import 'screens/splash_screen.dart';
+import 'widgets/main_container.dart';
 
 void main() {
   runApp(const AgricultureManagementApp());
