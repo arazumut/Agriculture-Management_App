@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../utils/theme_extension.dart';
 import '../widgets/common_app_bar.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _ReportsScreenState extends State<ReportsScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   String selectedPeriod = 'Bu Ay';
+  late bool isDarkMode;
 
   @override
   void initState() {
@@ -40,8 +42,10 @@ class _ReportsScreenState extends State<ReportsScreen>
 
   @override
   Widget build(BuildContext context) {
+    isDarkMode = context.isDarkMode;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: isDarkMode ? Colors.grey[900] : const Color(0xFFF8F9FA),
       appBar: CommonAppBar(
         title: 'Raporlar & Analizler',
         actions: [
@@ -132,7 +136,7 @@ class _ReportsScreenState extends State<ReportsScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: isDarkMode ? Colors.grey[850] : Colors.white,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -158,7 +162,7 @@ class _ReportsScreenState extends State<ReportsScreen>
     return Container(
       height: 45,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -270,7 +274,7 @@ class _ReportsScreenState extends State<ReportsScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -316,7 +320,7 @@ class _ReportsScreenState extends State<ReportsScreen>
                   style: GoogleFonts.poppins(
                     fontSize: valueFontSize,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
               ),
@@ -326,7 +330,7 @@ class _ReportsScreenState extends State<ReportsScreen>
                 style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+                  color: isDarkMode ? Colors.white70 : AppColors.textSecondary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -365,7 +369,7 @@ class _ReportsScreenState extends State<ReportsScreen>
           height: 250,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -495,7 +499,7 @@ class _ReportsScreenState extends State<ReportsScreen>
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -568,7 +572,7 @@ class _ReportsScreenState extends State<ReportsScreen>
                 amount,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: isDarkMode ? Colors.white70 : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -610,7 +614,7 @@ class _ReportsScreenState extends State<ReportsScreen>
           height: 200,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(

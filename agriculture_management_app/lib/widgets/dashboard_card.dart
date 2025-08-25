@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/app_colors.dart';
+import '../providers/theme_provider.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
@@ -21,13 +23,15 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode ? Colors.grey[850] : Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -59,7 +63,7 @@ class DashboardCard extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: isDarkMode ? Colors.white : AppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -73,7 +77,7 @@ class DashboardCard extends StatelessWidget {
               subtitle,
               style: GoogleFonts.poppins(
                 fontSize: 10,
-                color: AppColors.textSecondary,
+                color: isDarkMode ? Colors.white70 : AppColors.textSecondary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

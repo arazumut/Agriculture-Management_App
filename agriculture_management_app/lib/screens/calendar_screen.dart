@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../constants/app_colors.dart';
+import '../utils/theme_extension.dart';
 import '../widgets/common_app_bar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -16,11 +17,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  late bool isDarkMode;
 
   @override
   Widget build(BuildContext context) {
+    isDarkMode = context.isDarkMode;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDarkMode ? Colors.grey[900] : AppColors.background,
       appBar: CommonAppBar(
         title: 'İş Takvimi',
         actions: [
@@ -90,7 +94,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             // Takvim
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDarkMode ? Colors.grey[850] : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -149,7 +153,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   titleTextStyle: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                   formatButtonTextStyle: GoogleFonts.poppins(
                     color: AppColors.warning,
@@ -342,7 +346,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -350,7 +354,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   task['time']!,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color:
+                        isDarkMode ? Colors.white70 : AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -477,7 +482,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -485,7 +490,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   event['date']!,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color:
+                        isDarkMode ? Colors.white70 : AppColors.textSecondary,
                   ),
                 ),
               ],

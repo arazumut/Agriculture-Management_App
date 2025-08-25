@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/app_colors.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/common_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -11,12 +13,11 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> 
+class _SettingsScreenState extends State<SettingsScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
   bool _locationEnabled = true;
   bool _autoBackupEnabled = true;
 
@@ -27,13 +28,9 @@ class _SettingsScreenState extends State<SettingsScreen>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
     _animationController.forward();
   }
 
@@ -45,15 +42,20 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: const CommonAppBar(
-        title: 'Ayarlar',
-      ),
+      backgroundColor: isDarkMode ? Colors.grey[900] : AppColors.background,
+      appBar: const CommonAppBar(title: 'Ayarlar'),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 40),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 40,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,7 +70,9 @@ class _SettingsScreenState extends State<SettingsScreen>
               _buildAboutSection(),
               const SizedBox(height: 32),
               _buildLogoutSection(),
-              const SizedBox(height: 100), // Extra padding for bottom navigation
+              const SizedBox(
+                height: 100,
+              ), // Extra padding for bottom navigation
             ],
           ),
         ),
@@ -77,10 +81,11 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Widget _buildProfileSection() {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -99,18 +104,11 @@ class _SettingsScreenState extends State<SettingsScreen>
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primary,
-                  AppColors.primaryDark,
-                ],
+                colors: [AppColors.primary, AppColors.primaryDark],
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 35,
-            ),
+            child: Icon(Icons.person, color: Colors.white, size: 35),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -135,7 +133,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -143,11 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.verified,
-                        size: 16,
-                        color: AppColors.success,
-                      ),
+                      Icon(Icons.verified, size: 16, color: AppColors.success),
                       const SizedBox(width: 4),
                       Text(
                         'Premium Üye',
@@ -167,10 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             onPressed: () {
               // Profil düzenleme
             },
-            icon: Icon(
-              Icons.edit,
-              color: AppColors.primary,
-            ),
+            icon: Icon(Icons.edit, color: AppColors.primary),
           ),
         ],
       ),
@@ -186,13 +180,19 @@ class _SettingsScreenState extends State<SettingsScreen>
           style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color:
+                Provider.of<ThemeProvider>(context).isDarkMode
+                    ? Colors.white
+                    : AppColors.textPrimary,
           ),
         ),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color:
+                Provider.of<ThemeProvider>(context).isDarkMode
+                    ? Colors.grey[850]
+                    : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -251,7 +251,10 @@ class _SettingsScreenState extends State<SettingsScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color:
+                Provider.of<ThemeProvider>(context).isDarkMode
+                    ? Colors.grey[850]
+                    : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -308,7 +311,10 @@ class _SettingsScreenState extends State<SettingsScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color:
+                Provider.of<ThemeProvider>(context).isDarkMode
+                    ? Colors.grey[850]
+                    : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -320,15 +326,17 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
           child: Column(
             children: [
-              _buildSwitchItem(
-                icon: Icons.dark_mode,
-                title: 'Karanlık Mod',
-                subtitle: 'Gece kullanımı için',
-                value: _darkModeEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    _darkModeEnabled = value;
-                  });
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, child) {
+                  return _buildSwitchItem(
+                    icon: Icons.dark_mode,
+                    title: 'Karanlık Mod',
+                    subtitle: 'Gece kullanımı için',
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.setDarkMode(value);
+                    },
+                  );
                 },
               ),
               _buildSwitchItem(
@@ -373,7 +381,10 @@ class _SettingsScreenState extends State<SettingsScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color:
+                Provider.of<ThemeProvider>(context).isDarkMode
+                    ? Colors.grey[850]
+                    : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -418,11 +429,12 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Widget _buildLogoutSection() {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -446,11 +458,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.logout,
-                color: AppColors.error,
-                size: 24,
-              ),
+              Icon(Icons.logout, color: AppColors.error, size: 24),
               const SizedBox(width: 12),
               Text(
                 'Çıkış Yap',
@@ -479,14 +487,15 @@ class _SettingsScreenState extends State<SettingsScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: !isLast 
-            ? Border(
-                bottom: BorderSide(
-                  color: AppColors.textSecondary.withOpacity(0.1),
-                  width: 1,
-                ),
-              )
-            : null,
+          border:
+              !isLast
+                  ? Border(
+                    bottom: BorderSide(
+                      color: AppColors.textSecondary.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  )
+                  : null,
         ),
         child: Row(
           children: [
@@ -496,11 +505,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 color: AppColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                icon,
-                color: AppColors.primary,
-                size: 20,
-              ),
+              child: Icon(icon, color: AppColors.primary, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -512,14 +517,20 @@ class _SettingsScreenState extends State<SettingsScreen>
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color:
+                          Provider.of<ThemeProvider>(context).isDarkMode
+                              ? Colors.white
+                              : AppColors.textPrimary,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: GoogleFonts.poppins(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color:
+                          Provider.of<ThemeProvider>(context).isDarkMode
+                              ? Colors.white70
+                              : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -547,14 +558,15 @@ class _SettingsScreenState extends State<SettingsScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: !isLast 
-          ? Border(
-              bottom: BorderSide(
-                color: AppColors.textSecondary.withOpacity(0.1),
-                width: 1,
-              ),
-            )
-          : null,
+        border:
+            !isLast
+                ? Border(
+                  bottom: BorderSide(
+                    color: AppColors.textSecondary.withOpacity(0.1),
+                    width: 1,
+                  ),
+                )
+                : null,
       ),
       child: Row(
         children: [
@@ -564,11 +576,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: 20,
-            ),
+            child: Icon(icon, color: AppColors.primary, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -608,7 +616,9 @@ class _SettingsScreenState extends State<SettingsScreen>
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
         return AlertDialog(
+          backgroundColor: isDarkMode ? Colors.grey[850] : Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -616,13 +626,13 @@ class _SettingsScreenState extends State<SettingsScreen>
             'Çıkış Yap',
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: isDarkMode ? Colors.white : AppColors.textPrimary,
             ),
           ),
           content: Text(
             'Hesabınızdan çıkış yapmak istediğinizden emin misiniz?',
             style: GoogleFonts.poppins(
-              color: AppColors.textSecondary,
+              color: isDarkMode ? Colors.white70 : AppColors.textSecondary,
             ),
           ),
           actions: [
@@ -631,7 +641,10 @@ class _SettingsScreenState extends State<SettingsScreen>
               child: Text(
                 'İptal',
                 style: GoogleFonts.poppins(
-                  color: AppColors.textSecondary,
+                  color:
+                      Provider.of<ThemeProvider>(context).isDarkMode
+                          ? Colors.white70
+                          : AppColors.textSecondary,
                 ),
               ),
             ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/app_colors.dart';
+import '../providers/theme_provider.dart';
+import '../utils/theme_helper.dart';
 import '../widgets/main_container.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -54,8 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder:
-              (context, animation, secondaryAnimation) =>
-                  const MainContainer(),
+              (context, animation, secondaryAnimation) => const MainContainer(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },

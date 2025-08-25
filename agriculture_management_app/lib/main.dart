@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'constants/app_colors.dart';
+import 'providers/theme_provider.dart';
 import 'screens/splash_screen.dart';
-import 'widgets/main_container.dart';
 
 void main() {
-  runApp(const AgricultureManagementApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const AgricultureManagementApp(),
+    ),
+  );
 }
 
 class AgricultureManagementApp extends StatelessWidget {
@@ -15,6 +21,8 @@ class AgricultureManagementApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Tarım Yönetim Sistemi',
       debugShowCheckedModeBanner: false,
@@ -38,7 +46,7 @@ class AgricultureManagementApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
         fontFamily: 'Poppins',
       ),
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.themeMode,
 
       // Lokalizasyon ayarları
       localizationsDelegates: const [

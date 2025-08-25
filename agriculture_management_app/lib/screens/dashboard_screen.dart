@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../constants/app_colors.dart';
+import '../utils/theme_extension.dart';
 import '../widgets/common_app_bar.dart';
 import '../widgets/main_container.dart';
 import 'finance_screen.dart';
@@ -16,10 +17,11 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> 
+class _DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late bool isDarkMode;
 
   @override
   void initState() {
@@ -28,13 +30,9 @@ class _DashboardScreenState extends State<DashboardScreen>
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
     _animationController.forward();
   }
 
@@ -46,8 +44,11 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Context extension kullanarak tema modunu al
+    isDarkMode = context.isDarkMode;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDarkMode ? Colors.grey[900] : AppColors.background,
       appBar: CommonAppBar(
         title: 'Tarım Yönetim Sistemi',
         showBackButton: false,
@@ -55,7 +56,10 @@ class _DashboardScreenState extends State<DashboardScreen>
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   // Bildirimler sayfasına git
                 },
@@ -76,7 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   child: Text(
                     '3',
                     style: GoogleFonts.poppins(
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.grey[850] : Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
@@ -97,7 +101,12 @@ class _DashboardScreenState extends State<DashboardScreen>
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 40),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 40,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +121,9 @@ class _DashboardScreenState extends State<DashboardScreen>
               _buildChartSection(),
               const SizedBox(height: 32),
               _buildRecentActivities(),
-              const SizedBox(height: 100), // Add extra bottom padding for navigation bar
+              const SizedBox(
+                height: 100,
+              ), // Add extra bottom padding for navigation bar
             ],
           ),
         ),
@@ -123,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget _buildWelcomeSection() {
     DateTime now = DateTime.now();
     String greeting = _getGreeting(now.hour);
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -136,10 +147,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 1),
       ),
       child: Row(
         children: [
@@ -152,7 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -160,12 +168,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                   'Bugün tarım işlerinizi yönetmeye hazır mısınız?',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
-                    color: AppColors.textSecondary,
+                    color:
+                        isDarkMode ? Colors.white70 : AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -173,11 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.eco,
-                        size: 16,
-                        color: AppColors.success,
-                      ),
+                      Icon(Icons.eco, size: 16, color: AppColors.success),
                       const SizedBox(width: 4),
                       Text(
                         'Sistem Aktif',
@@ -199,11 +207,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              Icons.agriculture,
-              size: 40,
-              color: AppColors.primary,
-            ),
+            child: Icon(Icons.agriculture, size: 40, color: AppColors.primary),
           ),
         ],
       ),
@@ -304,7 +308,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -331,9 +335,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isPositive 
-                    ? AppColors.success.withOpacity(0.1) 
-                    : AppColors.error.withOpacity(0.1),
+                  color:
+                      isPositive
+                          ? AppColors.success.withOpacity(0.1)
+                          : AppColors.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -387,7 +392,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                     unit,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color:
+                          isDarkMode ? Colors.white70 : AppColors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -430,7 +436,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainContainer(initialPageIndex: 1),
+                    builder:
+                        (context) => const MainContainer(initialPageIndex: 1),
                   ),
                 );
               },
@@ -444,7 +451,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainContainer(initialPageIndex: 2),
+                    builder:
+                        (context) => const MainContainer(initialPageIndex: 2),
                   ),
                 );
               },
@@ -500,7 +508,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainContainer(initialPageIndex: 3),
+                    builder:
+                        (context) => const MainContainer(initialPageIndex: 3),
                   ),
                 );
               },
@@ -524,7 +533,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode ? Colors.grey[850] : Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -533,10 +542,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               offset: const Offset(0, 6),
             ),
           ],
-          border: Border.all(
-            color: color.withOpacity(0.1),
-            width: 1,
-          ),
+          border: Border.all(color: color.withOpacity(0.1), width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,7 +575,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -579,7 +585,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   subtitle,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color:
+                        isDarkMode ? Colors.white70 : AppColors.textSecondary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -599,10 +606,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.info,
-            AppColors.info.withOpacity(0.8),
-          ],
+          colors: [AppColors.info, AppColors.info.withOpacity(0.8)],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -624,7 +628,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: isDarkMode ? Colors.grey[850] : Colors.white,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -635,7 +639,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       style: GoogleFonts.poppins(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: isDarkMode ? Colors.grey[850] : Colors.white,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -646,7 +650,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           'Güneşli',
                           style: GoogleFonts.poppins(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: isDarkMode ? Colors.grey[850] : Colors.white,
                           ),
                         ),
                         Text(
@@ -666,7 +670,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           Icon(
             Icons.wb_sunny,
             size: 48,
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
           ),
         ],
       ),
@@ -690,7 +694,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           height: 220,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -723,7 +727,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                         '${value.toInt()}',
                         style: GoogleFonts.poppins(
                           fontSize: 12,
-                          color: AppColors.textSecondary,
+                          color:
+                              isDarkMode
+                                  ? Colors.white70
+                                  : AppColors.textSecondary,
                         ),
                       );
                     },
@@ -733,20 +740,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
-                      const months = [
-                        'Oca',
-                        'Şub',
-                        'Mar',
-                        'Nis',
-                        'May',
-                        'Haz',
-                      ];
+                      const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz'];
                       if (value.toInt() < months.length) {
                         return Text(
                           months[value.toInt()],
                           style: GoogleFonts.poppins(
                             fontSize: 12,
-                            color: AppColors.textSecondary,
+                            color:
+                                isDarkMode
+                                    ? Colors.white70
+                                    : AppColors.textSecondary,
                           ),
                         );
                       }
@@ -822,7 +825,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDarkMode ? Colors.grey[850] : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -874,14 +877,15 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: !isLast 
-          ? Border(
-              bottom: BorderSide(
-                color: AppColors.textSecondary.withOpacity(0.1),
-                width: 1,
-              ),
-            )
-          : null,
+        border:
+            !isLast
+                ? Border(
+                  bottom: BorderSide(
+                    color: AppColors.textSecondary.withOpacity(0.1),
+                    width: 1,
+                  ),
+                )
+                : null,
       ),
       child: Row(
         children: [
@@ -891,11 +895,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 20,
-            ),
+            child: Icon(icon, color: color, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -907,14 +907,15 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: isDarkMode ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color:
+                        isDarkMode ? Colors.white70 : AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -931,6 +932,4 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
     );
   }
-
-
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/app_colors.dart';
+import '../../providers/theme_provider.dart';
 
 class CommonBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -17,10 +19,11 @@ class CommonBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get the safe area padding at the bottom
     final double bottomPadding = MediaQuery.of(context).padding.bottom;
-    
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -45,7 +48,7 @@ class CommonBottomNavBar extends StatelessWidget {
           currentIndex: currentIndex,
           selectedItemColor: AppColors.primary,
           unselectedItemColor: AppColors.textSecondary,
-          backgroundColor: Colors.white,
+          backgroundColor: isDarkMode ? Colors.grey[850] : Colors.white,
           elevation: 0,
           selectedLabelStyle: GoogleFonts.poppins(
             fontSize: 12,

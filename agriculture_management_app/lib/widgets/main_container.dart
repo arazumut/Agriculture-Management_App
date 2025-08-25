@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constants/app_colors.dart';
+import '../providers/theme_provider.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/land_management_screen.dart';
 import '../screens/livestock_screen.dart';
@@ -54,6 +56,8 @@ class _MainContainerState extends State<MainContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
     // PopScope ile geri tuşu davranışını kontrol ediyoruz (Flutter 3.x için)
     return PopScope(
       canPop: _selectedIndex == 0, // Ana sayfada ise çıkış yapabilir
@@ -73,15 +77,32 @@ class _MainContainerState extends State<MainContainer> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Uygulamadan çıkmak istiyor musunuz?'),
+              backgroundColor: isDarkMode ? Colors.grey[850] : Colors.white,
+              title: Text(
+                'Uygulamadan çıkmak istiyor musunuz?',
+                style: TextStyle(
+                  color: isDarkMode ? Colors.white : AppColors.textPrimary,
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Hayır'),
+                  child: Text(
+                    'Hayır',
+                    style: TextStyle(
+                      color:
+                          isDarkMode ? Colors.white70 : AppColors.textSecondary,
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Evet'),
+                  child: Text(
+                    'Evet',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : AppColors.primary,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -95,7 +116,7 @@ class _MainContainerState extends State<MainContainer> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: isDarkMode ? Colors.grey[900] : AppColors.background,
         body: SafeArea(
           bottom:
               false, // Don't apply safe area to bottom since we have a custom bottom bar
