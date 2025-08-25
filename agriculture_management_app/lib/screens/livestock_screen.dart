@@ -12,7 +12,8 @@ class LivestockScreen extends StatefulWidget {
   State<LivestockScreen> createState() => _LivestockScreenState();
 }
 
-class _LivestockScreenState extends State<LivestockScreen> with TickerProviderStateMixin {
+class _LivestockScreenState extends State<LivestockScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -23,14 +24,10 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
   }
 
@@ -72,7 +69,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                 // Hoş Geldin Alanı
                 _buildWelcomeSection(),
                 const SizedBox(height: 16),
-                
+
                 // İstatistik Kartları
                 _buildStatsGrid(),
                 const SizedBox(height: 16),
@@ -138,11 +135,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               ],
             ),
           ),
-          Icon(
-            Icons.pets,
-            size: 42,
-            color: Colors.white.withOpacity(0.8),
-          ),
+          Icon(Icons.pets, size: 42, color: Colors.white.withOpacity(0.8)),
         ],
       ),
     );
@@ -197,8 +190,14 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildEnhancedStatCard(String title, String value, String subtitle,
-      IconData icon, Color color, String trend) {
+  Widget _buildEnhancedStatCard(
+    String title,
+    String value,
+    String subtitle,
+    IconData icon,
+    Color color,
+    String trend,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -298,10 +297,30 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildCategoryCard('Büyükbaş', '45', Icons.emoji_nature, AppColors.primary),
-              _buildCategoryCard('Küçükbaş', '80', Icons.pets, AppColors.secondary),
-              _buildCategoryCard('Kanatlı', '150', Icons.flutter_dash, AppColors.info),
-              _buildCategoryCard('Diğer', '12', Icons.category, AppColors.warning),
+              _buildCategoryCard(
+                'Büyükbaş',
+                '45',
+                Icons.emoji_nature,
+                AppColors.primary,
+              ),
+              _buildCategoryCard(
+                'Küçükbaş',
+                '80',
+                Icons.pets,
+                AppColors.secondary,
+              ),
+              _buildCategoryCard(
+                'Kanatlı',
+                '150',
+                Icons.flutter_dash,
+                AppColors.info,
+              ),
+              _buildCategoryCard(
+                'Diğer',
+                '12',
+                Icons.category,
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -309,7 +328,12 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildCategoryCard(String title, String count, IconData icon, Color color) {
+  Widget _buildCategoryCard(
+    String title,
+    String count,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       width: 130,
       margin: const EdgeInsets.only(right: 12),
@@ -381,9 +405,24 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
           ),
           child: Column(
             children: [
-              _buildActivityItem('Aşı Uygulaması', 'İnek #23 - 2 saat önce', Icons.medical_services, AppColors.success),
-              _buildActivityItem('Sağlık Kontrolü', 'Koyun #45 - 5 saat önce', Icons.health_and_safety, AppColors.info),
-              _buildActivityItem('Süt Sağımı', '120L toplandı - 1 gün önce', Icons.local_drink, AppColors.warning),
+              _buildActivityItem(
+                'Aşı Uygulaması',
+                'İnek #23 - 2 saat önce',
+                Icons.medical_services,
+                AppColors.success,
+              ),
+              _buildActivityItem(
+                'Sağlık Kontrolü',
+                'Koyun #45 - 5 saat önce',
+                Icons.health_and_safety,
+                AppColors.info,
+              ),
+              _buildActivityItem(
+                'Süt Sağımı',
+                '120L toplandı - 1 gün önce',
+                Icons.local_drink,
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -391,7 +430,12 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildActivityItem(String title, String subtitle, IconData icon, Color color) {
+  Widget _buildActivityItem(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -427,11 +471,7 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            color: AppColors.textSecondary,
-            size: 18,
-          ),
+          Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
         ],
       ),
     );
@@ -512,8 +552,10 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
     String selectedAnimalType = 'Büyükbaş';
     String selectedBreed = 'Holstein';
     String selectedGender = 'Dişi';
-    DateTime selectedBirthDate = DateTime.now().subtract(const Duration(days: 365));
-    
+    DateTime selectedBirthDate = DateTime.now().subtract(
+      const Duration(days: 365),
+    );
+
     final animalTypes = ['Büyükbaş', 'Küçükbaş', 'Kanatlı'];
     final breeds = {
       'Büyükbaş': ['Holstein', 'Simmental', 'Jersey', 'Angus', 'Yerli Kara'],
@@ -533,11 +575,19 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
         return StatefulBuilder(
           builder: (context, setState) {
             return Dialog(
+              insetPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 24,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Container(
-                constraints: const BoxConstraints(maxHeight: 700),
+                width: MediaQuery.of(context).size.width * 0.9,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                  maxWidth: 500,
+                ),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
@@ -552,7 +602,10 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [AppColors.secondary, AppColors.secondary.withOpacity(0.8)],
+                                  colors: [
+                                    AppColors.secondary,
+                                    AppColors.secondary.withOpacity(0.8),
+                                  ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -608,42 +661,55 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                         const SizedBox(height: 8),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.textSecondary.withOpacity(0.3)),
+                            border: Border.all(
+                              color: AppColors.textSecondary.withOpacity(0.3),
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: DropdownButtonFormField<String>(
                             value: selectedAnimalType,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                             ),
-                            items: animalTypes.map((type) {
-                              return DropdownMenuItem(
-                                value: type,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      type == 'Büyükbaş' ? Icons.pets 
-                                      : type == 'Küçükbaş' ? Icons.pets_outlined 
-                                      : Icons.flutter_dash,
-                                      color: AppColors.secondary,
-                                      size: 20,
+                            items:
+                                animalTypes.map((type) {
+                                  return DropdownMenuItem(
+                                    value: type,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          type == 'Büyükbaş'
+                                              ? Icons.pets
+                                              : type == 'Küçükbaş'
+                                              ? Icons.pets_outlined
+                                              : Icons.flutter_dash,
+                                          color: AppColors.secondary,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Text(
+                                            type,
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      type,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                                  );
+                                }).toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectedAnimalType = value!;
-                                selectedBreed = breeds[selectedAnimalType]!.first;
+                                selectedBreed =
+                                    breeds[selectedAnimalType]!.first;
                               });
                             },
                           ),
@@ -664,121 +730,144 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                           controller: tagController,
                           decoration: InputDecoration(
                             hintText: 'Örn: TR001234',
-                            prefixIcon: Icon(Icons.tag, color: AppColors.secondary),
+                            prefixIcon: Icon(
+                              Icons.tag,
+                              color: AppColors.secondary,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.textSecondary.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.secondary, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.secondary,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
 
-                        // Irk ve Cinsiyet
-                        Row(
+                        // Irk ve Cinsiyet - Taşma sorununu çözmek için Column olarak değiştirdik
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Irk',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.textSecondary.withOpacity(0.3)),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: DropdownButtonFormField<String>(
-                                      value: selectedBreed,
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      ),
-                                      items: breeds[selectedAnimalType]!.map((breed) {
-                                        return DropdownMenuItem(
-                                          value: breed,
-                                          child: Text(
-                                            breed,
-                                            style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedBreed = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                            // Irk
+                            Text(
+                              'Irk',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Cinsiyet',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
+                            const SizedBox(height: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.textSecondary.withOpacity(
+                                    0.3,
                                   ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.textSecondary.withOpacity(0.3)),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: DropdownButtonFormField<String>(
-                                      value: selectedGender,
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      ),
-                                      items: genders.map((gender) {
-                                        return DropdownMenuItem(
-                                          value: gender,
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                gender == 'Dişi' ? Icons.female : Icons.male,
-                                                color: gender == 'Dişi' ? Colors.pink : Colors.blue,
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                gender,
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: DropdownButtonFormField<String>(
+                                value: selectedBreed,
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                items:
+                                    breeds[selectedAnimalType]!.map((breed) {
+                                      return DropdownMenuItem(
+                                        value: breed,
+                                        child: Text(
+                                          breed,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedGender = value!;
-                                        });
-                                      },
-                                    ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedBreed = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            // Cinsiyet
+                            Text(
+                              'Cinsiyet',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.textSecondary.withOpacity(
+                                    0.3,
                                   ),
-                                ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: DropdownButtonFormField<String>(
+                                value: selectedGender,
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                items:
+                                    genders.map((gender) {
+                                      return DropdownMenuItem(
+                                        value: gender,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              gender == 'Dişi'
+                                                  ? Icons.female
+                                                  : Icons.male,
+                                              color:
+                                                  gender == 'Dişi'
+                                                      ? Colors.pink
+                                                      : Colors.blue,
+                                              size: 18,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              gender,
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedGender = value!;
+                                  });
+                                },
                               ),
                             ),
                           ],
@@ -820,14 +909,22 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                             }
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.textSecondary.withOpacity(0.3)),
+                              border: Border.all(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.calendar_today, color: AppColors.secondary),
+                                Icon(
+                                  Icons.calendar_today,
+                                  color: AppColors.secondary,
+                                ),
                                 const SizedBox(width: 12),
                                 Text(
                                   '${selectedBirthDate.day}/${selectedBirthDate.month}/${selectedBirthDate.year}',
@@ -838,7 +935,10 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                                   ),
                                 ),
                                 const Spacer(),
-                                Icon(Icons.arrow_drop_down, color: AppColors.textSecondary),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColors.textSecondary,
+                                ),
                               ],
                             ),
                           ),
@@ -860,15 +960,23 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'Örn: 450',
-                            prefixIcon: Icon(Icons.monitor_weight, color: AppColors.secondary),
+                            prefixIcon: Icon(
+                              Icons.monitor_weight,
+                              color: AppColors.secondary,
+                            ),
                             suffixText: 'kg',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.textSecondary.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.secondary, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.secondary,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -888,14 +996,22 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                           controller: locationController,
                           decoration: InputDecoration(
                             hintText: 'Örn: Ahır A, Bölüm 2',
-                            prefixIcon: Icon(Icons.location_on, color: AppColors.secondary),
+                            prefixIcon: Icon(
+                              Icons.location_on,
+                              color: AppColors.secondary,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.textSecondary.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.secondary, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.secondary,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -918,115 +1034,128 @@ class _LivestockScreenState extends State<LivestockScreen> with TickerProviderSt
                             hintText: 'Özel notlar, sağlık durumu, vs...',
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(bottom: 40),
-                              child: Icon(Icons.notes, color: AppColors.secondary),
+                              child: Icon(
+                                Icons.notes,
+                                color: AppColors.secondary,
+                              ),
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.textSecondary.withOpacity(0.3)),
+                              borderSide: BorderSide(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.secondary, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.secondary,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 32),
 
-                        // Butonlar
-                        Row(
+                        // Butonlar - Taşma sorununu çözmek için Column olarak değiştirdik
+                        Column(
                           children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    side: BorderSide(
-                                      color: AppColors.textSecondary.withOpacity(0.3),
-                                    ),
-                                  ),
-                                ),
-                                child: Text(
-                                  'İptal',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              flex: 2,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Form validation
-                                  if (tagController.text.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Küpe numarası zorunludur!',
-                                          style: GoogleFonts.poppins(),
-                                        ),
-                                        backgroundColor: AppColors.error,
-                                      ),
-                                    );
-                                    return;
-                                  }
-
-                                  // TODO: Hayvan ekleme API çağrısı
-                                  Navigator.pop(context);
-                                  
-                                  // Başarı mesajı
+                            // Ekle butonu
+                            ElevatedButton(
+                              onPressed: () {
+                                // Form validation
+                                if (tagController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Row(
-                                        children: [
-                                          const Icon(Icons.check_circle, color: Colors.white),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'Hayvan başarıyla eklendi!',
-                                            style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
+                                      content: Text(
+                                        'Küpe numarası zorunludur!',
+                                        style: GoogleFonts.poppins(),
                                       ),
-                                      backgroundColor: AppColors.success,
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                      backgroundColor: AppColors.error,
                                     ),
                                   );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.secondary,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                  return;
+                                }
+
+                                // TODO: Hayvan ekleme API çağrısı
+                                Navigator.pop(context);
+
+                                // Başarı mesajı
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Hayvan başarıyla eklendi!',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: AppColors.success,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
-                                  elevation: 0,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondary,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.add,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 0,
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.add, color: Colors.white),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Hayvan Ekle',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Hayvan Ekle',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            // İptal butonu
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: AppColors.textSecondary.withOpacity(
+                                      0.3,
                                     ),
-                                  ],
+                                  ),
+                                ),
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
+                              child: Text(
+                                'İptal',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textSecondary,
                                 ),
                               ),
                             ),
