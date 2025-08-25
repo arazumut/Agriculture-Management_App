@@ -56,10 +56,10 @@ class _MainContainerState extends State<MainContainer> {
   Widget build(BuildContext context) {
     // PopScope ile geri tuşu davranışını kontrol ediyoruz (Flutter 3.x için)
     return PopScope(
-      canPop: false,
+      canPop: _selectedIndex == 0, // Ana sayfada ise çıkış yapabilir
       onPopInvoked: (didPop) async {
         if (didPop) {
-          return;
+          return; // Zaten çıkış yapıldı
         }
 
         // Ana sayfada değilsek, ana sayfaya dön

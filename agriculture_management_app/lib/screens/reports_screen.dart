@@ -63,10 +63,10 @@ class _ReportsScreenState extends State<ReportsScreen>
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 100,
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 120,
           ), // Alt kısmı daha fazla boşluk bıraktık
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,47 +208,54 @@ class _ReportsScreenState extends State<ReportsScreen>
   }
 
   Widget _buildSummaryStats() {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      childAspectRatio: 1.4,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      children: [
-        _buildSummaryCard(
-          'Toplam Gelir',
-          '₺45,600',
-          'Bu ay +12%',
-          Icons.trending_up,
-          AppColors.success,
-          true,
-        ),
-        _buildSummaryCard(
-          'Toplam Gider',
-          '₺23,400',
-          'Bu ay -5%',
-          Icons.trending_down,
-          AppColors.error,
-          false,
-        ),
-        _buildSummaryCard(
-          'Net Kar',
-          '₺22,200',
-          'Bu ay +18%',
-          Icons.account_balance_wallet,
-          AppColors.primary,
-          true,
-        ),
-        _buildSummaryCard(
-          'ROI',
-          '%48.7',
-          'Bu ay +2.1%',
-          Icons.percent,
-          AppColors.info,
-          true,
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Ekran genişliğine göre dinamik ayarlama
+        final childAspectRatio = constraints.maxWidth > 400 ? 1.4 : 1.2;
+
+        return GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: childAspectRatio,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            _buildSummaryCard(
+              'Toplam Gelir',
+              '₺45,600',
+              'Bu ay +12%',
+              Icons.trending_up,
+              AppColors.success,
+              true,
+            ),
+            _buildSummaryCard(
+              'Toplam Gider',
+              '₺23,400',
+              'Bu ay -5%',
+              Icons.trending_down,
+              AppColors.error,
+              false,
+            ),
+            _buildSummaryCard(
+              'Net Kar',
+              '₺22,200',
+              'Bu ay +18%',
+              Icons.account_balance_wallet,
+              AppColors.primary,
+              true,
+            ),
+            _buildSummaryCard(
+              'ROI',
+              '%48.7',
+              'Bu ay +2.1%',
+              Icons.percent,
+              AppColors.info,
+              true,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -261,7 +268,7 @@ class _ReportsScreenState extends State<ReportsScreen>
     bool isPositive,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -273,52 +280,70 @@ class _ReportsScreenState extends State<ReportsScreen>
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Ekran boyutuna göre yazı boyutunu ayarla
+          final valueFontSize = constraints.maxWidth < 160 ? 20.0 : 24.0;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: color, size: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(icon, color: color, size: 18),
+                  ),
+                  Icon(
+                    isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+                    color: isPositive ? AppColors.success : AppColors.error,
+                    size: 14,
+                  ),
+                ],
               ),
-              Icon(
-                isPositive ? Icons.arrow_upward : Icons.arrow_downward,
-                color: isPositive ? AppColors.success : AppColors.error,
-                size: 16,
+              const SizedBox(height: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  value,
+                  style: GoogleFonts.poppins(
+                    fontSize: valueFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textSecondary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                change,
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  color: isPositive ? AppColors.success : AppColors.error,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          Text(
-            change,
-            style: GoogleFonts.poppins(
-              fontSize: 10,
-              color: isPositive ? AppColors.success : AppColors.error,
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
