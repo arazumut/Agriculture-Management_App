@@ -25,10 +25,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withOpacity(0.9),
-          ],
+          colors: [AppColors.primary, AppColors.primary.withOpacity(0.9)],
         ),
         boxShadow: [
           BoxShadow(
@@ -56,45 +53,55 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
             letterSpacing: 0.3,
           ),
         ),
-        leading: showBackButton
-            ? Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                    size: 20,
+        leading:
+            showBackButton
+                ? Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  onPressed: onBackPressed ?? () => Navigator.pop(context),
-                ),
-              )
-            : null,
-        actions: actions != null
-            ? [
-                ...actions!.map((widget) {
-                  if (widget is IconButton) {
-                    return Container(
-                      margin: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        icon: widget.icon,
-                        onPressed: widget.onPressed,
-                        iconSize: 20,
-                        color: Colors.white,
-                      ),
-                    );
-                  }
-                  return widget;
-                }).toList(),
-              ]
-            : null,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    onPressed:
+                        onBackPressed ??
+                        () {
+                          Navigator.pop(context);
+                        },
+                  ),
+                )
+                : null,
+        actions:
+            actions != null
+                ? [
+                  ...actions!.map((widget) {
+                    if (widget is IconButton) {
+                      return Container(
+                        margin: const EdgeInsets.only(
+                          right: 8,
+                          top: 8,
+                          bottom: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          icon: widget.icon,
+                          onPressed: widget.onPressed,
+                          iconSize: 20,
+                          color: Colors.white,
+                        ),
+                      );
+                    }
+                    return widget;
+                  }).toList(),
+                ]
+                : null,
       ),
     );
   }

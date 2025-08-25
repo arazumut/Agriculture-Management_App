@@ -12,7 +12,8 @@ class ReportsScreen extends StatefulWidget {
   State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateMixin {
+class _ReportsScreenState extends State<ReportsScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   String selectedPeriod = 'Bu Ay';
@@ -24,14 +25,10 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
   }
 
@@ -65,14 +62,19 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 40),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: 100,
+          ), // Alt kısmı daha fazla boşluk bıraktık
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Hoş Geldin Alanı
               _buildWelcomeSection(),
               const SizedBox(height: 24),
-              
+
               // Dönem Seçici
               _buildPeriodSelector(),
               const SizedBox(height: 24),
@@ -91,7 +93,9 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
 
               // Performans Metrikleri
               _buildPerformanceMetrics(),
-              const SizedBox(height: 100), // Bottom navigation için boşluk
+              const SizedBox(
+                height: 120,
+              ), // Bottom navigation için daha fazla boşluk
             ],
           ),
         ),
@@ -142,11 +146,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               ],
             ),
           ),
-          Icon(
-            Icons.analytics,
-            size: 48,
-            color: Colors.white.withOpacity(0.8),
-          ),
+          Icon(Icons.analytics, size: 48, color: Colors.white.withOpacity(0.8)),
         ],
       ),
     );
@@ -154,7 +154,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
 
   Widget _buildPeriodSelector() {
     final periods = ['Bu Hafta', 'Bu Ay', 'Bu Yıl', 'Tümü'];
-    
+
     return Container(
       height: 45,
       decoration: BoxDecoration(
@@ -170,11 +170,13 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
       ),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         itemCount: periods.length,
         itemBuilder: (context, index) {
           final period = periods[index];
           final isSelected = selectedPeriod == period;
-          
+
           return GestureDetector(
             onTap: () {
               setState(() {
@@ -183,7 +185,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
             },
             child: Container(
               margin: const EdgeInsets.all(4),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.primary : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
@@ -250,8 +252,14 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildSummaryCard(String title, String value, String change,
-      IconData icon, Color color, bool isPositive) {
+  Widget _buildSummaryCard(
+    String title,
+    String value,
+    String change,
+    IconData icon,
+    Color color,
+    bool isPositive,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -342,75 +350,104 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               ),
             ],
           ),
-          child: LineChart(
-            LineChartData(
-              gridData: FlGridData(show: true),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    getTitlesWidget: (value, meta) {
-                      return Text(
-                        '${value.toInt()}K',
-                        style: GoogleFonts.poppins(fontSize: 10),
-                      );
-                    },
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return LineChart(
+                LineChartData(
+                  gridData: FlGridData(show: true),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: (value, meta) {
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: Text(
+                              '${value.toInt()}K',
+                              style: GoogleFonts.poppins(fontSize: 10),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          const months = [
+                            'Oca',
+                            'Şub',
+                            'Mar',
+                            'Nis',
+                            'May',
+                            'Haz',
+                          ];
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < months.length) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                months[value.toInt()],
+                                style: GoogleFonts.poppins(fontSize: 10),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz'];
-                      return Text(
-                        months[value.toInt() % months.length],
-                        style: GoogleFonts.poppins(fontSize: 10),
-                      );
-                    },
-                  ),
-                ),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              ),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: [
-                    FlSpot(0, 30),
-                    FlSpot(1, 35),
-                    FlSpot(2, 40),
-                    FlSpot(3, 38),
-                    FlSpot(4, 45),
-                    FlSpot(5, 42),
+                  borderData: FlBorderData(show: false),
+                  minX: 0,
+                  maxX: 5,
+                  minY: 0,
+                  maxY: 50,
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: [
+                        FlSpot(0, 30),
+                        FlSpot(1, 35),
+                        FlSpot(2, 40),
+                        FlSpot(3, 38),
+                        FlSpot(4, 45),
+                        FlSpot(5, 42),
+                      ],
+                      isCurved: true,
+                      color: AppColors.success,
+                      barWidth: 3,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: AppColors.success.withOpacity(0.1),
+                      ),
+                    ),
+                    LineChartBarData(
+                      spots: [
+                        FlSpot(0, 20),
+                        FlSpot(1, 25),
+                        FlSpot(2, 22),
+                        FlSpot(3, 28),
+                        FlSpot(4, 24),
+                        FlSpot(5, 23),
+                      ],
+                      isCurved: true,
+                      color: AppColors.error,
+                      barWidth: 3,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: AppColors.error.withOpacity(0.1),
+                      ),
+                    ),
                   ],
-                  isCurved: true,
-                  color: AppColors.success,
-                  barWidth: 3,
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: AppColors.success.withOpacity(0.1),
-                  ),
                 ),
-                LineChartBarData(
-                  spots: [
-                    FlSpot(0, 20),
-                    FlSpot(1, 25),
-                    FlSpot(2, 22),
-                    FlSpot(3, 28),
-                    FlSpot(4, 24),
-                    FlSpot(5, 23),
-                  ],
-                  isCurved: true,
-                  color: AppColors.error,
-                  barWidth: 3,
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: AppColors.error.withOpacity(0.1),
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ],
@@ -445,11 +482,26 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
           ),
           child: Column(
             children: [
-              _buildProductionItem('Süt Üretimi', '1,250L', '85%', AppColors.info),
+              _buildProductionItem(
+                'Süt Üretimi',
+                '1,250L',
+                '85%',
+                AppColors.info,
+              ),
               const Divider(height: 32),
-              _buildProductionItem('Meyve Hasadı', '2.8 Ton', '92%', AppColors.success),
+              _buildProductionItem(
+                'Meyve Hasadı',
+                '2.8 Ton',
+                '92%',
+                AppColors.success,
+              ),
               const Divider(height: 32),
-              _buildProductionItem('Sebze Üretimi', '1.6 Ton', '78%', AppColors.warning),
+              _buildProductionItem(
+                'Sebze Üretimi',
+                '1.6 Ton',
+                '78%',
+                AppColors.warning,
+              ),
             ],
           ),
         ),
@@ -457,7 +509,12 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildProductionItem(String title, String amount, String efficiency, Color color) {
+  Widget _buildProductionItem(
+    String title,
+    String amount,
+    String efficiency,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -538,34 +595,93 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
               ),
             ],
           ),
-          child: BarChart(
-            BarChartData(
-              gridData: FlGridData(show: false),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      const categories = ['Süt', 'Meyve', 'Sebze', 'Hayvan'];
-                      return Text(
-                        categories[value.toInt() % categories.length],
-                        style: GoogleFonts.poppins(fontSize: 10),
-                      );
-                    },
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return BarChart(
+                BarChartData(
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          const categories = [
+                            'Süt',
+                            'Meyve',
+                            'Sebze',
+                            'Hayvan',
+                          ];
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < categories.length) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                categories[value.toInt()],
+                                style: GoogleFonts.poppins(fontSize: 10),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
                   ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: [
+                    BarChartGroupData(
+                      x: 0,
+                      barRods: [
+                        BarChartRodData(
+                          toY: 85,
+                          color: AppColors.info,
+                          width: constraints.maxWidth / 25,
+                        ),
+                      ],
+                    ),
+                    BarChartGroupData(
+                      x: 1,
+                      barRods: [
+                        BarChartRodData(
+                          toY: 92,
+                          color: AppColors.success,
+                          width: constraints.maxWidth / 25,
+                        ),
+                      ],
+                    ),
+                    BarChartGroupData(
+                      x: 2,
+                      barRods: [
+                        BarChartRodData(
+                          toY: 78,
+                          color: AppColors.warning,
+                          width: constraints.maxWidth / 25,
+                        ),
+                      ],
+                    ),
+                    BarChartGroupData(
+                      x: 3,
+                      barRods: [
+                        BarChartRodData(
+                          toY: 95,
+                          color: AppColors.secondary,
+                          width: constraints.maxWidth / 25,
+                        ),
+                      ],
+                    ),
+                  ],
+                  maxY: 100, // Maksimum değeri belirledik
                 ),
-              ),
-              borderData: FlBorderData(show: false),
-              barGroups: [
-                BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 85, color: AppColors.info, width: 20)]),
-                BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 92, color: AppColors.success, width: 20)]),
-                BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 78, color: AppColors.warning, width: 20)]),
-                BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 95, color: AppColors.secondary, width: 20)]),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ],

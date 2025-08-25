@@ -10,10 +10,7 @@ import '../widgets/navigation/common_bottom_nav_bar.dart';
 class MainContainer extends StatefulWidget {
   final int initialPageIndex;
 
-  const MainContainer({
-    Key? key, 
-    this.initialPageIndex = 0,
-  }) : super(key: key);
+  const MainContainer({Key? key, this.initialPageIndex = 0}) : super(key: key);
 
   @override
   State<MainContainer> createState() => _MainContainerState();
@@ -57,24 +54,66 @@ class _MainContainerState extends State<MainContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        bottom: false, // Don't apply safe area to bottom since we have a custom bottom bar
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(), // Disable swiping
-          children: _pages,
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
+    // PopScope ile geri tuşu davranışını kontrol ediyoruz (Flutter 3.x için)
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+
+        // Ana sayfada değilsek, ana sayfaya dön
+        if (_selectedIndex != 0) {
+          _onItemTapped(0);
+          return; // Uygulamayı kapatma
+        }
+
+        // Ana sayfadaysak, çıkış için onay sor
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Uygulamadan çıkmak istiyor musunuz?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Hayır'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Evet'),
+                ),
+              ],
+            );
           },
+        );
+
+        if (shouldPop == true) {
+          // Uygulamadan çıkış için gerekli işlemler
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          bottom:
+              false, // Don't apply safe area to bottom since we have a custom bottom bar
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(), // Disable swiping
+            children: _pages,
+            onPageChanged: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+          ),
         ),
-      ),
-      bottomNavigationBar: CommonBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        bottomNavigationBar: CommonBottomNavBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
