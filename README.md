@@ -16,6 +16,7 @@ Modern tarım ve hayvancılık işletmeleri için geliştirilmiş kapsamlı Flut
 - Ekim, sulama, gübreleme takvimi
 - Verim analizi ve raporlama
 
+
 ### 🐄 Hayvancılık Takibi
 - Hayvan türleri yönetimi
 - Sağlık durumu takibi
